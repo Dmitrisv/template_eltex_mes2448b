@@ -1,0 +1,161 @@
+zabbix_export:
+  version: '7.2'
+  template_groups:
+    - uuid: 36bff6c29af64692839d077febfc7079
+      name: 'Templates/Network devices'
+  templates:
+    - uuid: f777181cd71a4a5489e1ecdd37a0ea7c
+      template: 'Eltex MES2448b'
+      name: 'Eltex MES2448b'
+      groups:
+        - name: 'Templates/Network devices'
+      items:
+        - uuid: 086e10de05194673b2ed05065d2ea615
+          name: 'CPU usage 1min'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.35265.1.139.6.1.1.2.2.0]'
+          key: cpu1min
+          units: '%'
+        - uuid: 3e18b5b44d844329b0cf32d644060000
+          name: 'CPU usage 5m'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.35265.1.139.6.1.1.2.3.0]'
+          key: cpu5min
+          delay: 5m
+          units: '%'
+        - uuid: e91b948de0a649f4aaab20de59d2560f
+          name: 'CPU usage 5s'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.35265.1.139.6.1.1.2.1.0]'
+          key: cpu5sec
+          delay: 5s
+          units: '%'
+        - uuid: c43b310031ee4239bac1682d9f2a457c
+          name: 'FAN1 Level'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.35265.1.139.12.1.5.1.1.2.1]'
+          key: fan1lvl
+          units: level
+        - uuid: db05038574ca41a7a76a13c15cbb659c
+          name: FAN1
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.35265.1.139.12.1.5.1.1.1.1]'
+          key: fan1rpm
+          units: rpm
+        - uuid: 5fdbb921e5054f57b595e12c35ca4ce4
+          name: 'FAN1 Status'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.2076.81.13.1.1.2.1]'
+          key: fan1status
+          delay: 1h
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '1'
+                - OK
+            - type: STR_REPLACE
+              parameters:
+                - '2'
+                - 'Not Present'
+            - type: STR_REPLACE
+              parameters:
+                - '3'
+                - Failed
+            - type: STR_REPLACE
+              parameters:
+                - '4'
+                - 'Not Operational'
+            - type: STR_REPLACE
+              parameters:
+                - '5'
+                - Unknown
+        - uuid: 913a1403e1cd4bdf830b0c6593bd2ccb
+          name: 'FAN2 Level'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.35265.1.139.12.1.5.1.1.2.2]'
+          key: fan2lvl
+          units: level
+        - uuid: b50d0aa1e90541b4bf14e99fb5e535cb
+          name: FAN2
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.35265.1.139.12.1.5.1.1.1.2]'
+          key: fan2rpm
+          units: rpm
+        - uuid: e8bc8a95f9334357b08be7814d1b727f
+          name: 'FAN2 Status'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.2076.81.13.1.1.2.2]'
+          key: fan2status
+          delay: 1h
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '1'
+                - OK
+            - type: STR_REPLACE
+              parameters:
+                - '2'
+                - 'Not Present'
+            - type: STR_REPLACE
+              parameters:
+                - '3'
+                - Failed
+            - type: STR_REPLACE
+              parameters:
+                - '4'
+                - 'Not Operational'
+            - type: STR_REPLACE
+              parameters:
+                - '5'
+                - Unknown
+        - uuid: dfbbe640d71840ae8bfeea9f401507e8
+          name: 'Flash utilization'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.2076.81.1.75.0]'
+          key: flash
+          delay: 3h
+          units: '%'
+        - uuid: d3458afc7d8f4cef9aaca5a47fa40508
+          name: 'RAM utilization'
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.2076.81.1.73.0]'
+          key: ram
+          units: '%'
+        - uuid: 2c4e1905bf5d471f860e77c912eb6d7e
+          name: Temperature
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.4.1.2076.81.1.66.0]'
+          key: temperature
+          units: °C
+        - uuid: 3744cd56066d444d8f698ad6c9d56d6d
+          name: Uptime
+          type: SNMP_AGENT
+          snmp_oid: 'get[1.3.6.1.2.1.1.3.0]'
+          key: uptime
+          units: uptime
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+  graphs:
+    - uuid: 8c388b7e50354e8ea3bdeb8a5b398006
+      name: 'CPU utilization'
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: FF0000
+          yaxisside: RIGHT
+          calc_fnc: ALL
+          item:
+            host: 'Eltex MES2448b'
+            key: cpu5sec
+    - uuid: 20c1a66e7db34a16a17df186f58e460f
+      name: Uptime
+      graph_items:
+        - drawtype: FILLED_REGION
+          color: 80FF00
+          calc_fnc: ALL
+          item:
+            host: 'Eltex MES2448b'
+            key: uptime
